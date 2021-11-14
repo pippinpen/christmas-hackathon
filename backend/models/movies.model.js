@@ -2,9 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const MovieSchema = new Schema({
-  name: {
+  title: {
     type: String,
     required: true,
+  },
+  poster_path: {
+    type: String,
+  },
+  release_data: {
+    type: String,
   }
 })
 

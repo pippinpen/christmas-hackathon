@@ -13,6 +13,6 @@ router
   .get("/:id?", getBoards)
   .post("/", createMoodBoard)
   .put("/:id", updateBoard)
-.delete("/:id", deleteBoard)
+  .delete("/:id", deleteBoard)
 
 module.exports = router;

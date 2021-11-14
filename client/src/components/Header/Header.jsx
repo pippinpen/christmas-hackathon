@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "hsl(113, 100%, 19%)",
   },
   menuButton: {
-    marginRight: "-50px", // Because it off-centers the title (logically -64px)
+    marginRight: "50px", // Because it off-centers the title (logically -64px)
   },
   title: {
     flexGrow: 1,

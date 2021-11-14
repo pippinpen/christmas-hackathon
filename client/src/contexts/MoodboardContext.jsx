@@ -137,7 +137,7 @@ export const MoodboardsProvider = (props) => {
   const deleteMoodboard = async (id) => {
     let deletedMoodboard = null;
     try {
-      const response = await fetch(`${/api/v1/moodboards}${id}`, {
+      const response = await fetch(`/api/v1/moodboards/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

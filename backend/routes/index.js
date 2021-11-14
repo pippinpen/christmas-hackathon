@@ -10,6 +10,7 @@ module.exports = function (app) {
   // app.use(`${API_ENDPOINT}/${API_VERSION}/orders`, require("./products.routes"));
   // app.use(`${API_ENDPOINT}/${API_VERSION}/home`, require("./home.routes"));
   app.use(`${API_ENDPOINT}/${API_VERSION}/moodboards`, require("./moodBoard.routes"));
+  app.use(`${API_ENPOINT}/${API_VERION}/moodBoards/:moodboardId/add-movie/:movieId`, require('./movies.routes'));
 
   //! Todo handle ajax 404 vs static files
   app.get("*", (req, res) => {

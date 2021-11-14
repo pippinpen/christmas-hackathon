@@ -2,16 +2,16 @@
 // import { useToasts } from "react-toast-notifications";
 // // import cloneDeep from 'lodash.cloneDeep' <-- use if your objects get complex
 
-// export const MoodboardContext = createContext({
-//   fetchMoodboard: () => [],
-//   addMoodboard: () => {},
-//   updateMoodboard: () => {},
-//   deleteMoodboard: () => {},
-//   loaded: false,
-//   loading: false,
-//   error: null,
-//   moodboards: [],
-// });
+export const MoodboardsContext = createContext({
+  fetchMoodboards: () => [],
+  addMoodboard: () => {},
+  updateMoodboard: () => {},
+  deleteMoodboard: () => {},
+  loaded: false,
+  loading: false,
+  error: null,
+  moodboards: [],
+});
 
 // const MOODBOARD_ENDPOINT = "https://carsapp2050.herokuapp.com/api/v1/cars/";
 
@@ -33,14 +33,14 @@
 //     }
 //     setLoading(true);
     
-//     try {
-//       const response = await fetch(MOODBOARDS_ENDPOINT);
-//       if (response.status !== 200) {
-//         throw response;
-//       }
-//       const data = await response.json();
-//       localStorage.setItem('cars', JSON.stringify(data));
-//       setCars(data);
+    try {
+      const response = await fetch("/api/v1/moodboards");
+      if (response.status !== 200) {
+        throw response;
+      }
+      const data = await response.json();
+      localStorage.setItem('cars', JSON.stringify(data));
+      setCars(data);
 
 //       // setLoading(false);
 //       // console.log('cars from context', cars);
@@ -52,35 +52,35 @@
 //     }
 //   };
 
-//   const addCar = async (formData) => {
-//     console.log('about to add', formData);
-//     try {
-//       const response = await fetch("/api/v1/moodboards", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           // 'Content-Type': 'application/x-www-form-urlencoded',
-//         },
-//         body: JSON.stringify(formData),
-//       });
-//       if (response.status !== 201) {
-//         throw response;
-//       }
-//       const savedMoodboard = await response.json();
-//       console.log("got data", savedCar);
-//       const newMoodboards = [...moodboards, savedMoodboard];
-//       localStorage.setItem('moodboards', JSON.stringify(newMoodboards));
-//       setCars(newMoodboards);
-//       // addToast(`Saved ${savedCar.name}`, {
-//       //   appearance: "success",
-//       // });
-//     } catch (err) {
-//       console.log(err);
-//       // addToast(`Error ${err.message || err.statusText}`, {
-//       //   appearance: "error",
-//       // });
-//     }
-//   };
+  const addMoodboard = async (formData) => {
+    console.log('about to add', formData);
+    try {
+      const response = await fetch("/api/v1/moodboards", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.status !== 201) {
+        throw response;
+      }
+      const savedMoodboard = await response.json();
+      console.log("got data", savedCar);
+      const newMoodboards = [...moodboards, savedMoodboard];
+      localStorage.setItem('moodboards', JSON.stringify(newMoodboards));
+      setCars(newMoodboards);
+      // addToast(`Saved ${savedCar.name}`, {
+      //   appearance: "success",
+      // });
+    } catch (err) {
+      console.log(err);
+      // addToast(`Error ${err.message || err.statusText}`, {
+      //   appearance: "error",
+      // });
+    }
+  };
 
 //   const updateMoodboard = async (id, updates) => {
 //     console.log('updating', id, updates);
@@ -105,83 +105,116 @@
 //       const oldMoodboard = moodboards[index];
 //       console.log('oldMoodboard', oldMoodboard);
 
-//       // Merge with updates
-//       updatedMoodboard = {
-//         // legit use of 'var', so can be seen in catch block
-//         ...oldCar,
-//         ...updates, // order here is important for the override!!
-//       };
-//       console.log('updatedCar', updatedCar);
-//       // recreate the cars array
-//       const updatedCars = [
-//         ...cars.slice(0, index),
-//         updatedCar,
-//         ...cars.slice(index + 1),
-//       ];
-//       localStorage.setItem('cars', JSON.stringify(updatedCars));
-//       // addToast(`Updated ${updatedCar.name}`, {
-//       //   appearance: "success",
-//       // });
-//       setCars(updatedCars);
-//     } catch (err) {
-//       console.log(err);
-//       // addToast(
-//       //   `Error: Failed to update ${updatedCar.name}`,
-//       //   {
-//       //     appearance: "error",
-//       //   }
-//       // );
-//     }
-//   };
+      // Merge with updates
+      updatedMoodboard = {
+        // legit use of 'var', so can be seen in catch block
+        ...oldMoodboard,
+        ...updates, // order here is important for the override!!
+      };
+      console.log('updatedMoodboard', updatedMoodboard);
+      // recreate the cars array
+      const updatedMoodboards = [
+        ...moodboards.slice(0, index),
+        updatedMoodboard,
+        ...moodboards.slice(index + 1),
+      ];
+      localStorage.setItem('moodboards', JSON.stringify(updatedMoodboards));
+      // addToast(`Updated ${updatedCar.name}`, {
+      //   appearance: "success",
+      // });
+      setMoodboards(updatedMoodboards);
+    } catch (err) {
+      console.log(err);
+      // addToast(
+      //   `Error: Failed to update ${updatedCar.name}`,
+      //   {
+      //     appearance: "error",
+      //   }
+      // );
+    }
+  };
 
-//   const deleteCar = async (id) => {
-//     let deletedCar = null;
-//     try {
-//       const response = await fetch(`${CARS_ENDPOINT}${id}`, {
-//         method: "DELETE",
-//         headers: {
-//           "Content-Type": "application/json",
-//           // 'Content-Type': 'application/x-www-form-urlencoded',
-//         },
-//       });
-//       if (response.status !== 204) {
-//         throw response;
-//       }
-//       // Get index
-//       const index = cars.findIndex((car) => car._id === id);
-//       deletedCar = cars[index];
-//       // recreate the cars array without that car
-//       const updatedCars = [...cars.slice(0, index), ...cars.slice(index + 1)];
-//       localStorage.setItem('cars', JSON.stringify(updatedCars));
-//       setCars(updatedCars);
-//       console.log(`Deleted ${deletedCar.name}`);
-//       // addToast(`Deleted ${deletedCar.name}`, {
-//       //   appearance: "success",
-//       // });
-//     } catch (err) {
-//       console.log(err);
-//       // addToast(
-//       //   `Error: Failed to update ${deletedCar.name}`,
-//       //   {
-//       //     appearance: "error",
-//       //   }
-//       // );
-//     }
-//   };
+  const deleteMoodboard = async (id) => {
+    let deletedMoodboard = null;
+    try {
+      const response = await fetch(`${/api/v1/moodboards}${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      if (response.status !== 204) {
+        throw response;
+      }
+      // Get index
+      const index = moodboards.findIndex((moodboard) => moodboard._id === id);
+      deletedMoodboard = moodboards[index];
+      // recreate the cars array without that car
+      const updatedMoodboards = [...moodboards.slice(0, index), ...moodboards.slice(index + 1)];
+      localStorage.setItem('moodboards', JSON.stringify(updatedMoodboards));
+      setMoodboards(updatedMoodboards);
+      console.log(`Deleted ${deletedMoodboard.name}`);
+      // addToast(`Deleted ${deletedCar.name}`, {
+      //   appearance: "success",
+      // });
+    } catch (err) {
+      console.log(err);
+      // addToast(
+      //   `Error: Failed to update ${deletedCar.name}`,
+      //   {
+      //     appearance: "error",
+      //   }
+      // );
+    }
+  };
 
-//   return (
-//     <CarsContext.Provider
-//       value={{
-//         cars,
-//         loading,
-//         error,
-//         fetchCars,
-//         addCar,
-//         updateCar,
-//         deleteCar,
-//       }}
-//     >
-//       {props.children}
-//     </CarsContext.Provider>
-//   );
-// };
+
+// ADD MOVIE
+const addMovie = async (formData) => {
+  console.log('about to add', formData);
+  try {
+    const response = await fetch("/api/v1/moodboards/:boardid/add-movie/:movie-id", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.status !== 201) {
+      throw response;
+    }
+    const savedMoodboard = await response.json();
+    console.log("got data", savedMovie);
+    const newMovies = [...movies, savedMovies];
+    localStorage.setItem('movies', JSON.stringify(newMovies));
+    setCars(newMovies);
+    // addToast(`Saved ${savedCar.name}`, {
+    //   appearance: "success",
+    // });
+  } catch (err) {
+    console.log(err);
+    // addToast(`Error ${err.message || err.statusText}`, {
+    //   appearance: "error",
+    // });
+  }
+};
+
+
+  return (
+    <MoodboardsContext.Provider
+      value={{
+        moodboards,
+        loading,
+        error,
+        fetchMoodboards,
+        addMoodboard,
+        updateMoodboard,
+        deleteMoodboard,
+      }}
+    >
+      {props.children}
+    </MoodboardsContext.Provider>
+  );
+};

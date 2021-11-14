@@ -2,8 +2,8 @@ import React, { createContext, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 // import cloneDeep from 'lodash.cloneDeep' <-- use if your objects get complex
 
-export const MoodboardContext = createContext({
-  fetchMoodboard: () => [],
+export const MoodboardsContext = createContext({
+  fetchMoodboards: () => [],
   addMoodboard: () => {},
   updateMoodboard: () => {},
   deleteMoodboard: () => {},
@@ -34,7 +34,7 @@ export const MoodboardsProvider = (props) => {
     setLoading(true);
     
     try {
-      const response = await fetch(CARS_ENDPOINT);
+      const response = await fetch("/api/v1/moodboards");
       if (response.status !== 200) {
         throw response;
       }
@@ -52,7 +52,7 @@ export const MoodboardsProvider = (props) => {
     }
   };
 
-  const addCar = async (formData) => {
+  const addMoodboard = async (formData) => {
     console.log('about to add', formData);
     try {
       const response = await fetch("/api/v1/moodboards", {
@@ -108,21 +108,21 @@ export const MoodboardsProvider = (props) => {
       // Merge with updates
       updatedMoodboard = {
         // legit use of 'var', so can be seen in catch block
-        ...oldCar,
+        ...oldMoodboard,
         ...updates, // order here is important for the override!!
       };
-      console.log('updatedCar', updatedCar);
+      console.log('updatedMoodboard', updatedMoodboard);
       // recreate the cars array
-      const updatedCars = [
-        ...cars.slice(0, index),
-        updatedCar,
-        ...cars.slice(index + 1),
+      const updatedMoodboards = [
+        ...moodboards.slice(0, index),
+        updatedMoodboard,
+        ...moodboards.slice(index + 1),
       ];
-      localStorage.setItem('cars', JSON.stringify(updatedCars));
+      localStorage.setItem('moodboards', JSON.stringify(updatedMoodboards));
       // addToast(`Updated ${updatedCar.name}`, {
       //   appearance: "success",
       // });
-      setCars(updatedCars);
+      setMoodboards(updatedMoodboards);
     } catch (err) {
       console.log(err);
       // addToast(
@@ -134,10 +134,10 @@ export const MoodboardsProvider = (props) => {
     }
   };
 
-  const deleteCar = async (id) => {
-    let deletedCar = null;
+  const deleteMoodboard = async (id) => {
+    let deletedMoodboard = null;
     try {
-      const response = await fetch(`${CARS_ENDPOINT}${id}`, {
+      const response = await fetch(`${/api/v1/moodboards}${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -148,13 +148,13 @@ export const MoodboardsProvider = (props) => {
         throw response;
       }
       // Get index
-      const index = cars.findIndex((car) => car._id === id);
-      deletedCar = cars[index];
+      const index = moodboards.findIndex((moodboard) => moodboard._id === id);
+      deletedMoodboard = moodboards[index];
       // recreate the cars array without that car
-      const updatedCars = [...cars.slice(0, index), ...cars.slice(index + 1)];
-      localStorage.setItem('cars', JSON.stringify(updatedCars));
-      setCars(updatedCars);
-      console.log(`Deleted ${deletedCar.name}`);
+      const updatedMoodboards = [...moodboards.slice(0, index), ...moodboards.slice(index + 1)];
+      localStorage.setItem('moodboards', JSON.stringify(updatedMoodboards));
+      setMoodboards(updatedMoodboards);
+      console.log(`Deleted ${deletedMoodboard.name}`);
       // addToast(`Deleted ${deletedCar.name}`, {
       //   appearance: "success",
       // });
@@ -169,19 +169,52 @@ export const MoodboardsProvider = (props) => {
     }
   };
 
+
+// ADD MOVIE
+const addMovie = async (formData) => {
+  console.log('about to add', formData);
+  try {
+    const response = await fetch("/api/v1/moodboards/:boardid/add-movie/:movie-id", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.status !== 201) {
+      throw response;
+    }
+    const savedMoodboard = await response.json();
+    console.log("got data", savedMovie);
+    const newMovies = [...movies, savedMovies];
+    localStorage.setItem('movies', JSON.stringify(newMovies));
+    setCars(newMovies);
+    // addToast(`Saved ${savedCar.name}`, {
+    //   appearance: "success",
+    // });
+  } catch (err) {
+    console.log(err);
+    // addToast(`Error ${err.message || err.statusText}`, {
+    //   appearance: "error",
+    // });
+  }
+};
+
+
   return (
-    <CarsContext.Provider
+    <MoodboardsContext.Provider
       value={{
-        cars,
+        moodboards,
         loading,
         error,
-        fetchCars,
-        addCar,
-        updateCar,
-        deleteCar,
+        fetchMoodboards,
+        addMoodboard,
+        updateMoodboard,
+        deleteMoodboard,
       }}
     >
       {props.children}
-    </CarsContext.Provider>
+    </MoodboardsContext.Provider>
   );
 };

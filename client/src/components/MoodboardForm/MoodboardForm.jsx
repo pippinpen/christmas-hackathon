@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useContext, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   TextField,
@@ -7,16 +7,15 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from "@material-ui/core";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
-import { useParams } from "react-router-dom";
+} from '@material-ui/core';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { useParams } from 'react-router-dom';
 import { productCategories } from './../../constants';
 
-import { ProductsContext } from "./../../contexts/products.context";
+import { ProductsContext } from './../../contexts/products.context';
 // import ErrorBoundary from "./../../components/error-boundary/ErrorBoundary";
-
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -25,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
   formRow: {
     margin: theme.spacing(1),
     minWidth: 120,
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center',
   },
   formControl: {
     margin: theme.spacing(1),
@@ -38,27 +37,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const schema = yup.object().shape({
-  title: yup.string().required().min(2).max(20),
-  price: yup.string().required().min(2).max(5),
-  category: yup.mixed().oneOf(productCategories).required(),
+  movies: yup.string().required().min(2).max(20),
+  name: yup.string().required().min(2).max(5),
+  recipes: yup.mixed().oneOf(productCategories).required(),
 });
 
-function ProductForm({ initialValues }) {
+function MoodboardForm({ initialValues }) {
   const classes = useStyles();
   let { id } = useParams();
   const [populated, setPopulated] = useState(false);
 
   const defaultValues = {
-    price: "",
-    title: "",
-    category: "",
+    name: '',
+    movies: '',
+    recipes: '',
   };
 
-  const { addProduct, updateProduct } = useContext(ProductsContext);
+  const { addMoodboard, updateMoodboard } = useContext(MoodboardsContext);
   const { handleSubmit, errors, control, reset, formState } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues,
   });
 
@@ -66,127 +65,144 @@ function ProductForm({ initialValues }) {
   const { isDirty, isValid } = formState;
 
   if (initialValues && !populated) {
-    // initialValues.price = initialValues.price / 100;
+    // initialValues.name = initialValues.name / 100;
     reset({
       ...initialValues,
-      price: (initialValues.price / 100).toFixed(2),
+      name: (initialValues.name / 100).toFixed(2),
     });
     setPopulated(true);
   }
 
   // console.log("errors", errors);
   const onSubmit = async (formValues) => {
-    console.log("formValues", formValues);
+    console.log('formValues', formValues);
     // formValues._id = id; // pulled from the URL using router 'useParams' hook
 
-    if (formValues.price) {
-      formValues.price = formValues.price * 100;
+    if (formValues.name) {
+      formValues.name = formValues.name * 100;
     }
 
     if (populated) {
       const updates = {};
       for (const key in initialValues) {
         if (initialValues.hasOwnProperty(key)) {
-          if (initialValues[key] !== formValues[key] && key[0] !== "_") {
+          if (initialValues[key] !== formValues[key] && key[0] !== '_') {
             updates[key] = formValues[key];
           }
         }
       }
-      console.log("updates", updates);
-      updateProduct(id, updates);
+      console.log('updates', updates);
+      updateMoodboard(id, updates);
     } else {
-      addProduct(formValues);
+      addMoodboard(formValues);
     }
     reset(defaultValues);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={classes.formrow}>
+
+<div className={classes.formrow}>
         <Controller
           render={(
             { onChange, onBlur, value, name, ref },
-            { invalid, isTouched, isDirty }
+            { invalid, isTouched, isDirty },
           ) => (
             <TextField
               inputRef={ref}
               value={value}
               onChange={onChange}
               onBlur={onBlur}
-              error={!!errors.title}
-              helperText={errors.title?.message}
-              id="title"
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              id="name"
               name={name}
-              label="title"
+              placeholder="your name"
+              label="name"
             />
           )}
-          name="title"
+          name="name"
           control={control}
           rules={{ required: true }}
         />
       </div>
-      <div className={classes.formrow}>
+      
+           <div className={classes.formrow}>
         <Controller
           render={(
             { onChange, onBlur, value, name, ref },
-            { invalid, isTouched, isDirty }
-          ) => (
-            <TextField
-              inputRef={ref}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              error={!!errors.price}
-              helperText={errors.price?.message}
-              id="price"
-              name={name}
-              placeholder="x.xx"
-              label="price £x.xx"
-            />
-          )}
-          name="price"
-          control={control}
-          rules={{ required: true }}
-        />
-      </div>
-      <div className={classes.formrow}>
-        <Controller
-          render={(
-            { onChange, onBlur, value, name, ref },
-            { invalid, isTouched, isDirty }
+            { invalid, isTouched, isDirty },
           ) => (
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="category">Choose a category</InputLabel>
+              <InputLabel htmlFor="movies">Choose a recipe</InputLabel>
               <Select
                 inputRef={ref}
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
-                error={!!errors.category}
-                id="category"
+                error={!!errors.recipes}
+                id="movies"
                 name={name}
-                label="category"
+                label="movies"
                 required={true}
               >
-                <MenuItem value="">Choose a category</MenuItem>
-                {productCategories.map((category) => (
-                  <MenuItem key={category} value={category}>
-                    {category}
+                <MenuItem value="">Choose a movie</MenuItem>
+                {productCategories.map((movies) => (
+                  <MenuItem key={movies} value={movies}>
+                    {movies}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           )}
-          name="category"
+          name="movies"
           control={control}
           rules={{ required: true }}
         />
-        {errors.category ? (
-                <InputLabel htmlFor="category">
-                  {errors.category.message}
-                </InputLabel>
-              ) : (
-                ""
-              )}
+        {errors.movies ? (
+          <InputLabel htmlFor="movies">{errors.movies.message}</InputLabel>
+        ) : (
+          ''
+        )}
+      </div>
+     
+
+      <div className={classes.formrow}>
+        <Controller
+          render={(
+            { onChange, onBlur, value, name, ref },
+            { invalid, isTouched, isDirty },
+          ) => (
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="recipes">Choose a recipe</InputLabel>
+              <Select
+                inputRef={ref}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                error={!!errors.recipes}
+                id="recipes"
+                name={name}
+                label="recipes"
+                required={true}
+              >
+                <MenuItem value="">Choose a recipe</MenuItem>
+                {productCategories.map((recipes) => (
+                  <MenuItem key={recipes} value={recipes}>
+                    {recipes}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          name="recipes"
+          control={control}
+          rules={{ required: true }}
+        />
+        {errors.recipes ? (
+          <InputLabel htmlFor="recipes">{errors.recipes.message}</InputLabel>
+        ) : (
+          ''
+        )}
       </div>
       <div className={classes.formrow}>
         <Button onClick={() => reset(defaultValues)}>Reset</Button>
@@ -197,7 +213,7 @@ function ProductForm({ initialValues }) {
           className={classes.button}
           disabled={!isValid || !isDirty}
         >
-          {populated ? "Update" : "Add"} Product
+          {populated ? 'Update' : 'Add'} Moodboard
         </Button>
       </div>
     </form>

@@ -2,22 +2,22 @@ import React, { createContext, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 // import cloneDeep from 'lodash.cloneDeep' <-- use if your objects get complex
 
-export const CarsContext = createContext({
-  fetchCars: () => [],
-  addCar: () => {},
-  updateCar: () => {},
-  deleteCar: () => {},
+export const MoodboardContext = createContext({
+  fetchMoodboard: () => [],
+  addMoodboard: () => {},
+  updateMoodboard: () => {},
+  deleteMoodboard: () => {},
   loaded: false,
   loading: false,
   error: null,
-  cars: [],
+  moodboards: [],
 });
 
-const CARS_ENDPOINT = "https://carsapp2050.herokuapp.com/api/v1/cars/";
+// const CARS_ENDPOINT = "https://carsapp2050.herokuapp.com/api/v1/cars/";
 
-export const CarsProvider = (props) => {
-  const [cars, setCars] = useState(() => {
-    return JSON.parse(localStorage.getItem('cars')) || [];
+export const MoodboardsProvider = (props) => {
+  const [moodboards, setMoodboards] = useState(() => {
+    return JSON.parse(localStorage.getItem('moodboards')) || [];
   });
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -25,7 +25,7 @@ export const CarsProvider = (props) => {
   // const [search, setSearch] = useState("");
   // const { addToast } = useToasts();
 
-  const fetchCars = async () => {
+  const fetchMoodboards = async () => {
     // console.log('loading', loading);
     // console.log('error', error);
     if (loading || loaded || error) {
@@ -55,7 +55,7 @@ export const CarsProvider = (props) => {
   const addCar = async (formData) => {
     console.log('about to add', formData);
     try {
-      const response = await fetch(CARS_ENDPOINT, {
+      const response = await fetch("/api/v1/moodboards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,11 +66,11 @@ export const CarsProvider = (props) => {
       if (response.status !== 201) {
         throw response;
       }
-      const savedCar = await response.json();
+      const savedMoodboard = await response.json();
       console.log("got data", savedCar);
-      const newCars = [...cars, savedCar];
-      localStorage.setItem('cars', JSON.stringify(newCars));
-      setCars(newCars);
+      const newMoodboards = [...moodboards, savedMoodboard];
+      localStorage.setItem('moodboards', JSON.stringify(newMoodboards));
+      setCars(newMoodboards);
       // addToast(`Saved ${savedCar.name}`, {
       //   appearance: "success",
       // });
@@ -82,9 +82,9 @@ export const CarsProvider = (props) => {
     }
   };
 
-  const updateCar = async (id, updates) => {
+  const updateMoodboard = async (id, updates) => {
     console.log('updating', id, updates);
-    let updatedCar = null;
+    let updatedMoodboard = null;
     try {
       const response = await fetch(`${CARS_ENDPOINT}${id}`, {
         method: "PUT",
@@ -98,15 +98,15 @@ export const CarsProvider = (props) => {
         throw response;
       }
       // Get index
-      const index = cars.findIndex((car) => car._id === id);
+      const index = Moodboards.findIndex((moodboard) => moodboard._id === id);
       console.log(index)
 
       // Get actual car
-      const oldCar = cars[index];
-      console.log('oldCar', oldCar);
+      const oldMoodboard = moodboards[index];
+      console.log('oldMoodboard', oldMoodboard);
 
       // Merge with updates
-      updatedCar = {
+      updatedMoodboard = {
         // legit use of 'var', so can be seen in catch block
         ...oldCar,
         ...updates, // order here is important for the override!!

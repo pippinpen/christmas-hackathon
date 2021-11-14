@@ -31,16 +31,16 @@ function App() {
     <Router>
       <ToastProvider autoDismiss={true}>
         <UIProvider>
-        {/* <MoodboardsProvider> */}
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/recipes"
-            component={Recipes} />
-            <Route path="/movies" component={Movies} />
-            <Route path="/create-moodboard" component={CreateMoodboard} />
-            <Route path="*" component={NotFound} />
-          </Switch>
-        {/* </MoodboardsProvider> */}
+          <MoodboardsProvider>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/recipes"
+              component={Recipes} />
+              <Route path="/movies" component={Movies} />
+              <Route path="/create-moodboard" component={CreateMoodboard} />
+              <Route path="*" component={NotFound} />
+            </Switch>
+          </MoodboardsProvider>
         </UIProvider>
       </ToastProvider>
     </Router>

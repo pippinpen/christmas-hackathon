@@ -1,6 +1,10 @@
 import React, { createContext, useState } from "react";
 import { useToasts } from "react-toast-notifications";
+<<<<<<< HEAD
 
+=======
+// import cloneDeep from 'lodash.cloneDeep' <-- use if your objects get complex
+>>>>>>> 019338e82bbaa3e5c7c569817387cc3f30c24ab2
 
 export const MoodboardsContext = createContext({
   fetchMoodboards: () => [],
@@ -86,7 +90,11 @@ export const MoodboardsProvider = (props) => {
     console.log('updating', id, updates);
     let updatedMoodboard = null;
     try {
+<<<<<<< HEAD
       const response = await fetch(`/api/v1/moodboards/${id}`, {
+=======
+      const response = await fetch(`${CARS_ENDPOINT}${id}`, {
+>>>>>>> 019338e82bbaa3e5c7c569817387cc3f30c24ab2
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +106,11 @@ export const MoodboardsProvider = (props) => {
         throw response;
       }
       // Get index
+<<<<<<< HEAD
       const index = moodboards.findIndex((moodboard) => moodboard._id === id);
+=======
+      const index = Moodboards.findIndex((moodboard) => moodboard._id === id);
+>>>>>>> 019338e82bbaa3e5c7c569817387cc3f30c24ab2
       console.log(index)
 
       // Get actual car

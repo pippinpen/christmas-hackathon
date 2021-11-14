@@ -3,9 +3,9 @@ import { useToasts } from "react-toast-notifications";
 
 export const MoodboardsContext = createContext({
   fetchMoodboards: () => [],
-  addMoodboard: () => {},
-  updateMoodboard: () => {},
-  deleteMoodboard: () => {},
+  addMoodboard: () => { },
+  updateMoodboard: () => { },
+  deleteMoodboard: () => { },
   loaded: false,
   loading: false,
   error: null,
@@ -31,15 +31,21 @@ export const MoodboardsProvider = (props) => {
       return;
     }
     setLoading(true);
-    
+
     try {
-      const response = await fetch("/api/v1/moodboards");
+      const response = await fetch("/api/v1/moodboards", {
+        method: "GET",
+        headers: {
+          "content/type": "application/json"
+        },
+      });
       if (response.status !== 200) {
         throw response;
       }
       const data = await response.json();
+      console.log(data)
       localStorage.setItem('cars', JSON.stringify(data));
-      
+
 
       // setLoading(false);
       // console.log('cars from context', cars);
@@ -66,10 +72,10 @@ export const MoodboardsProvider = (props) => {
         throw response;
       }
       const savedMoodboard = await response.json();
-      
+
       const newMoodboards = [...moodboards, savedMoodboard];
       localStorage.setItem('moodboards', JSON.stringify(newMoodboards));
-     
+
       // addToast(`Saved ${savedCar.name}`, {
       //   appearance: "success",
       // });
@@ -118,11 +124,11 @@ export const MoodboardsProvider = (props) => {
         ...moodboards.slice(index + 1),
       ];
       localStorage.setItem('moodboards', JSON.stringify(updatedMoodboards));
-      
+
       setMoodboards(updatedMoodboards);
     } catch (err) {
       console.log(err);
-      
+
     }
   };
 
@@ -162,36 +168,36 @@ export const MoodboardsProvider = (props) => {
   };
 
 
-// ADD MOVIE
-// const addMovie = async (formData) => {
-//   console.log('about to add', formData);
-//   try {
-//     const response = await fetch("/api/v1/moodboards/:boardid/add-movie/:movie-id", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         // 'Content-Type': 'application/x-www-form-urlencoded',
-//       },
-//       body: JSON.stringify(formData),
-//     });
-//     if (response.status !== 201) {
-//       throw response;
-//     }
-//     const savedMoodboard = await response.json();
-//     console.log("got data", savedMovie);
-//     const newMovies = [...movies, savedMovies];
-//     localStorage.setItem('movies', JSON.stringify(newMovies));
-//     setCars(newMovies);
-//     // addToast(`Saved ${savedCar.name}`, {
-//     //   appearance: "success",
-//     // });
-//   } catch (err) {
-//     console.log(err);
-//     // addToast(`Error ${err.message || err.statusText}`, {
-//     //   appearance: "error",
-//     // });
-//   }
-// };
+  // ADD MOVIE
+  // const addMovie = async (formData) => {
+  //   console.log('about to add', formData);
+  //   try {
+  //     const response = await fetch("/api/v1/moodboards/:boardid/add-movie/:movie-id", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         // 'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+  //     if (response.status !== 201) {
+  //       throw response;
+  //     }
+  //     const savedMoodboard = await response.json();
+  //     console.log("got data", savedMovie);
+  //     const newMovies = [...movies, savedMovies];
+  //     localStorage.setItem('movies', JSON.stringify(newMovies));
+  //     setCars(newMovies);
+  //     // addToast(`Saved ${savedCar.name}`, {
+  //     //   appearance: "success",
+  //     // });
+  //   } catch (err) {
+  //     console.log(err);
+  //     // addToast(`Error ${err.message || err.statusText}`, {
+  //     //   appearance: "error",
+  //     // });
+  //   }
+  // };
 
 
   return (

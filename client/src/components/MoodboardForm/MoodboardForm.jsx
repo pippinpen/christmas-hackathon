@@ -11,10 +11,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
-import { useParams } from 'react-router-dom';
-import { productCategories } from './../../constants';
-
-import { ProductsContext } from './../../contexts/products.context';
+import { MoodboardContext } from '../../contexts/MoodboardContext';
 // import ErrorBoundary from "./../../components/error-boundary/ErrorBoundary";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,23 +34,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const schema = yup.object().shape({
-  movies: yup.string().required().min(2).max(20),
-  name: yup.string().required().min(2).max(5),
-  recipes: yup.mixed().oneOf(productCategories).required(),
+  name: yup.string().required(),
 });
 
-function MoodboardForm({ initialValues }) {
+function MoodboardForm() {
   const classes = useStyles();
-  let { id } = useParams();
-  const [populated, setPopulated] = useState(false);
+  // let { id } = useParams();
 
-  const defaultValues = {
-    name: '',
-    movies: '',
-    recipes: '',
-  };
 
-  const { addMoodboard, updateMoodboard } = useContext(MoodboardsContext);
+  const { addMoodboard, updateMoodboard } = useContext(MoodboardContext);
   const { handleSubmit, errors, control, reset, formState } = useForm({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -101,7 +90,7 @@ function MoodboardForm({ initialValues }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
 
-<div className={classes.formrow}>
+      <div className={classes.formrow}>
         <Controller
           render={(
             { onChange, onBlur, value, name, ref },
@@ -125,8 +114,8 @@ function MoodboardForm({ initialValues }) {
           rules={{ required: true }}
         />
       </div>
-      
-           <div className={classes.formrow}>
+
+      <div className={classes.formrow}>
         <Controller
           render={(
             { onChange, onBlur, value, name, ref },
@@ -164,7 +153,7 @@ function MoodboardForm({ initialValues }) {
           ''
         )}
       </div>
-     
+
 
       <div className={classes.formrow}>
         <Controller

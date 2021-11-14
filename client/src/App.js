@@ -19,24 +19,29 @@ import Activities from "./pages/Activities/Activities";
 import NotFound from "./pages/404/404";
 
 // PROVIDERS
+import { MoodboardsProvider } from "./contexts/MoodboardContext";
 
-import history from "./utils/history";
+// import history from "./utils/history";
 
 
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/recipes"
-        component={Recipes} />
-        <Route path="/playlists"
-        component={Playlists}/>
-        <Route path="/movies" component={Movies} />
-        <Route path="/gifts" component={Gifts} />
-        <Route path="/activities" component={Activities} />
-        <Route path="*" component={NotFound} />
-      </Switch>
+      <ToastProvider autoDismiss={true}>
+        {/* <MoodboardsProvider> */}
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/recipes"
+            component={Recipes} />
+            <Route path="/playlists"
+            component={Playlists}/>
+            <Route path="/movies" component={Movies} />
+            <Route path="/gifts" component={Gifts} />
+            <Route path="/activities" component={Activities} />
+            <Route path="*" component={NotFound} />
+          </Switch>
+        {/* </MoodboardsProvider> */}
+      </ToastProvider>
     </Router>
   );
 }
